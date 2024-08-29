@@ -38,8 +38,11 @@ I have used gvision library to train the data set from roboflow [gvision](https:
 
 Run the following command after getting your conda environment setup.
 
+```bash
+python app.py
+```
 
-### Detailed Description of the Logic Behind Analyzing Model Predictions
+## Detailed Description of the Logic Behind Analyzing Model Predictions
 
 This script utilizes a pre-trained YOLO (You Only Look Once) model for object detection and tracking. The following is a step-by-step breakdown of the logic and procedures used to analyze the model's predictions.
 
@@ -106,6 +109,3 @@ This script utilizes a pre-trained YOLO (You Only Look Once) model for object de
 
 This script provides a straightforward way to apply a pre-trained YOLO model to a video file or webcam feed for object detection and tracking. By following the described steps, an evaluator can easily reproduce the results and understand the underlying logic behind the model's predictions. The combination of user input handling, video processing, and real-time visualization makes this tool versatile for various object tracking applications.
 
-```bash
-python app.py
-```
