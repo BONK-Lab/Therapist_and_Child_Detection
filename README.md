@@ -31,7 +31,7 @@ Make sure you have the following installed:
 
 ## Yolov8
 
-I have used gvision library to train the data set from roboflow [a link](https://github.com/gaurang157/gvision)
+I have used gvision library to train the data set from roboflow [gvision](https://github.com/gaurang157/gvision)
 
 
 ## Run
