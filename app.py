@@ -9,13 +9,13 @@ import os
 model = YOLO('best.pt')
 
 def process_video(video_path, use_webcam):
-    output_dir = "processed_videos"  # Directory to save the processed videos
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    base_output_dir = "runs/detect"  # Base directory for YOLO outputs
+    Path(base_output_dir).mkdir(parents=True, exist_ok=True)
 
     if use_webcam:
         st.info("Using webcam for tracking...")
         # Track objects using webcam (source=0)
-        results = model.track(source=0, show=False, save=True, tracker='bytetrack.yaml')
+        results = model.track(source=0, show=False, save=True, tracker='bytetrack.yaml', save_dir=base_output_dir)
     else:
         if not video_path:
             st.error("No video selected. Please upload a video file.")
@@ -23,10 +23,10 @@ def process_video(video_path, use_webcam):
 
         st.info(f"Processing video: {video_path}...")
         # Track objects in the selected video
-        results = model.track(source=video_path, show=False, save=True, tracker='bytetrack.yaml')
+        results = model.track(source=video_path, show=False, save=True, tracker='bytetrack.yaml', save_dir=base_output_dir)
 
-    # Get the path of the latest processed video
-    latest_run_dir = max(Path(output_dir).glob('*'), key=os.path.getctime)
+    # Locate the latest run directory
+    latest_run_dir = max(Path(base_output_dir).glob('track*'), key=os.path.getctime)
     processed_video_path = next(latest_run_dir.glob('*.mp4'), None)
 
     if processed_video_path:
