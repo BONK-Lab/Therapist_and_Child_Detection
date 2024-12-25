@@ -90,3 +90,4 @@ Werkzeug==3.0.4
 yolov5==7.0.13
 yolov8==0.0.2
 zipp==3.20.1
+streamlit
