@@ -3,6 +3,7 @@ from ultralytics import YOLO
 import streamlit as st
 from pathlib import Path
 import tempfile
+import os
 
 # Load the YOLO model
 model = YOLO('best.pt')
@@ -14,7 +15,7 @@ def process_video(video_path, use_webcam):
     if use_webcam:
         st.info("Using webcam for tracking...")
         # Track objects using webcam (source=0)
-        results = model.track(source=0, show=True, save=True, tracker='bytetrack.yaml')
+        results = model.track(source=0, show=False, save=True, tracker='bytetrack.yaml')
     else:
         if not video_path:
             st.error("No video selected. Please upload a video file.")
@@ -22,10 +23,18 @@ def process_video(video_path, use_webcam):
 
         st.info(f"Processing video: {video_path}...")
         # Track objects in the selected video
-        results = model.track(source=video_path, show=True, save=True, tracker='bytetrack.yaml')
+        results = model.track(source=video_path, show=False, save=True, tracker='bytetrack.yaml')
 
-    # Inform the user where the video is saved
-    st.success(f"Processed video saved in: {Path(output_dir).absolute()}")
+    # Get the path of the latest processed video
+    latest_run_dir = max(Path(output_dir).glob('*'), key=os.path.getctime)
+    processed_video_path = next(latest_run_dir.glob('*.mp4'), None)
+
+    if processed_video_path:
+        st.success(f"Processed video saved at: {processed_video_path}")
+        return str(processed_video_path)
+    else:
+        st.error("Processed video not found.")
+        return None
 
 # Streamlit App UI
 st.title("YOLO Object Tracking")
@@ -45,8 +54,16 @@ if option == "Upload a Video File":
             temp_video_path = temp_video.name
 
         # Process the uploaded video
-        process_video(temp_video_path, use_webcam=False)
+        processed_video_path = process_video(temp_video_path, use_webcam=False)
+
+        # Show the processed video on the front end
+        if processed_video_path:
+            st.video(processed_video_path)
 else:
     # Webcam option
     if st.button("Start Webcam Tracking"):
-        process_video(None, use_webcam=True)
+        processed_video_path = process_video(None, use_webcam=True)
+
+        # Show the processed video on the front end
+        if processed_video_path:
+            st.video(processed_video_path)
